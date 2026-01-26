@@ -1,5 +1,15 @@
 #!/usr/bin/env sh
 
+while getopts "Z:NM" flag; do
+    case "{$flag}" in
+        Z) echo "Z $OPTARG";;
+        N) echo "Nice enabled :)";;
+        M) echo "Mean enabled >:(";;
+        *) echo "Invalid flag: $flag"; exit 1
+    esac
+done
+
+
 # Load our config file
 # shellcheck source=./backup.conf.sh
 . "$1"
