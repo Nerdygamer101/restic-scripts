@@ -18,13 +18,25 @@ while getopts "Z:NcL:d:" flag; do
 done
 
 ################################################################################
+# Parses the arguments in a newline separated variable into a command line
+# argument array. Prepends by default. Takes one variable as an argument.
+################################################################################
+prepend_args() {
+    echo "$1" | while read -r line; do
+        [ -n "$line" ] && \
+        set -- "$line" "$@"
+        continue
+    done
+}
+
+################################################################################
 # Takes one argument, a backup configuration file.
 ################################################################################
 backup() (
     # shellcheck source=./backup.conf.sh
     . "$1"
-
-    cd "$BACKUP_DIR" || exit 1
+    set --
+    prepend_args "$BACKUP_TARGETS"
 
     nice -n "${NICE_VALUE:-0}" \
         restic backup \
